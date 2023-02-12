@@ -7,7 +7,13 @@ from telebot import types
 
 bot = telebot.TeleBot("6131203698:AAH0vXX_8YuTzENkHTamN7TWSYktiboBPJE")
 
+@dataclass
+class UserInfo:
+    user_id: int
+    task: str = None  # Задание (номер лабы или курсач)
+    description: str = None  # Описание задания (всякие ограничения и предметная область)
 
+<<<<<<< HEAD
 @dataclass
 class UserInfo:
     user_id: int
@@ -15,6 +21,8 @@ class UserInfo:
     description: str = None  # Описание задания (всякие ограничения и предметная область)
 
 
+=======
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 # Сюда будут добавляться пользователи, совершившие заказ
 users_info: dict[int, UserInfo] = dict()  # user_id : UserInfo
 
@@ -26,6 +34,7 @@ start_buttons_labels = [
     "Курсовая работа",
 ]
 
+<<<<<<< HEAD
 COURSE_WORK_BUTTONS = ["Программа",
                        "Программа + Отчёт"
                        ]
@@ -33,6 +42,10 @@ COURSE_WORK_BUTTONS = ["Программа",
 """/start"""
 
 
+=======
+
+"""/start"""
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 @bot.message_handler(commands=['start'])
 def start(message: types.Message):
     sMess = f'<b>Привет, {message.from_user.first_name} {message.from_user.last_name}, я - FundaBot</b>'
@@ -52,25 +65,34 @@ def start(message: types.Message):
         btn = types.KeyboardButton(text=btn_label)
         btns.append(btn)
     markup.add(*btns)
+<<<<<<< HEAD
     bot.send_message(message.chat.id, "Выберите нужную функцию:", reply_markup=markup)
 
 
 """/help"""
+=======
+    bot.send_message(message.chat.id, "Что ты хочешь посмотреть?", reply_markup=markup)
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 
 
+"""/help"""
 @bot.message_handler(commands=['help'])
 def help(message: types.Message):
     bot.send_message(message.chat.id, "Временно недоступно")
 
 
 """/get_users - возвращает users_info для дебага"""
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 @bot.message_handler(commands=["get_users"])
 def get_users(message: types.Message):
     bot.send_message(message.chat.id, str(users_info))
 
 
+<<<<<<< HEAD
 """Обработчик курсовой работы. 
 Выводит две кнопки, где пользователь выбирает нужный ему заказ"""
 
@@ -130,14 +152,28 @@ def handle_start_button(message: types.Message):
         bot.send_message(message.chat.id, "Теперь дайте описание задачи (ограничения, предметная область и т. д.)")
     else:
         handle_coursework(message)
+=======
+"""Обработчик всех стартовых кнопок"""
+@bot.message_handler(func=lambda msg: msg.text in start_buttons_labels)
+def handle_start_button(message: types.Message):
+    user_id = message.from_user.id
+    task = message.text
+    user_info = UserInfo(user_id=user_id, task=task)
+    users_info[user_id] = user_info  # Добавляем пользователя в список, пока без описания задачи
+    bot.send_message(message.chat.id, "Теперь дайте описание задачи (ограничения, предметная область и т. д.)")
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 
 
 """Обработчик описания задачи. 
 Если пользователь ещё не дал описание задачи, то обработчик берёт текст из сообщения и ставит его как описание"""
+<<<<<<< HEAD
 
 
 @bot.message_handler(
     func=lambda msg: users_info.get(msg.from_user.id) and users_info[msg.from_user.id].description is None)
+=======
+@bot.message_handler(func=lambda msg: users_info.get(msg.from_user.id) and users_info[msg.from_user.id].description is None)
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 def handle_task_description(message: types.Message):
     user_id = message.from_user.id
     task_description = message.text
@@ -145,6 +181,7 @@ def handle_task_description(message: types.Message):
     bot.send_message(message.chat.id, "Заказ оформлен. Ждите решение через некоторое время.")
 
 
+<<<<<<< HEAD
 """Обработчик курсовой работы. 
 Выводит две кнопки, где пользователь выбирает нужный ему заказ"""
 
@@ -159,4 +196,6 @@ def handle_coursework(message: types.Message):
     bot.send_message(message.chat.id, "Что ты хочешь заказать?", reply_markup=markup)
 
 
+=======
+>>>>>>> cf791ad210572449db0f26a1215d7defd9eecd94
 bot.polling(none_stop=True)
