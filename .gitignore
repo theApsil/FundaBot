@@ -1,1 +1,4 @@
 venv
+tasks.db
+sensitive_data.py
+__pycache__
